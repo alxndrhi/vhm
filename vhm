@@ -1,0 +1,43 @@
+#/bin/bash
+# vim: set ft=sh:
+source ~/.vhm/vars.cfg
+
+disable () {
+ if [ -f /etc/apache2/sites-enabled/$1.conf ]
+ then
+   rm /etc/apache2/sites-enabled/$1.conf
+ fi
+}
+
+usage () {
+  echo "Usage: vhm [action] example.dev"
+  echo
+  echo "Actions: create (cr), enable (en), disable (dis), or delete (del)"
+  echo
+}
+
+if [ $# -ne 2 ];
+then
+ usage
+else
+ serverName=$2
+ serverLabName="${serverName/dev/$labName}"
+
+ case $1 in
+   cr|create)
+     sed "s@SERVER-ADMIN@$adminEmail@g;s@SERVER-PATH@$(pwd)@g;s@SERVER-DEV-NAME@$2@g;s@SERVER-LAB-NAME@$serverLabName@g" $vhostTemplate > /etc/apache2/sites-available/$2.conf
+     ;;
+   en|enable)
+     ln -s /etc/apache2/sites-available/$2.conf /etc/apache2/sites-enabled/$2.conf
+     ;;
+   dis|disable)
+     disable $2
+     ;;
+   del|delete)
+     disable $2
+     rm /etc/apache2/sites-available/$2.conf
+     ;;
+   *)
+     usage
+  esac
+fi
