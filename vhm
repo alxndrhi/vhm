@@ -2,6 +2,15 @@
 # vim: set ft=sh:
 source ~/.vhm/vars.cfg
 
+## VARIABLES AND CONSTANTS
+actionCreate=-1
+actionEnable=-1
+actionDisable=-1
+actionDelete=-1
+apacheRestart=-1
+
+
+## FUNCTINS
 disable () {
  if [ -f /etc/apache2/sites-enabled/$1.conf ]
  then
@@ -10,34 +19,99 @@ disable () {
 }
 
 usage () {
-  echo "Usage: vhm [action] example.dev"
+  echo "Usage: vhm --create -apache-restart --domain example.dev -template templateFileName"
   echo
-  echo "Actions: create (cr), enable (en), disable (dis), or delete (del)"
+  echo "Parameter:"
+  echo "cr | -cr | --create       create VirtualHost"
+  echo "en | -en | --enable       enable VirtualHost"
+  echo "dis | -dis | --disable    disable VirtualHost"
+  echo "del | -del | --delete     delete VirtualHost"
+  echo
+  echo "Parameter can be combined. So --create and --enable in one command is possible"
+  echo
+  echo "-ar | --apache-restart    Restart Apache"
+  echo "-d  | --domain            Domain Name for the VirtualHost"
+  echo "-t  | --template          Template Name to use for this Host"
+  echo "-h  | --help              This little message"
+  echo
+  echo "You may not use --create and --delete in one command."
+  echo "Same goes for --enable and --disable. That would be ..."
   echo
 }
 
-if [ $# -ne 2 ];
-then
- usage
-else
- serverName=$2
- serverLabName="${serverName/dev/$labName}"
 
- case $1 in
-   cr|create)
-     sed "s@SERVER-ADMIN@$adminEmail@g;s@SERVER-PATH@$(pwd)@g;s@SERVER-DEV-NAME@$2@g;s@SERVER-LAB-NAME@$serverLabName@g" $vhostTemplate > /etc/apache2/sites-available/$2.conf
+## MAIN
+if [ $# -eq 0 ]; then
+  usage
+  exit 1
+fi
+
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    -d | --domain)
+      shift
+      domain=$1
+      ;;
+    -ar | --apache-restart)
+      apacheRestart=1
+      ;;
+    -t | --template)
+      shift
+      template=$1
+      ;;
+    cr | -cr | --create)
+      actionCreate=1
      ;;
-   en|enable)
-     ln -s /etc/apache2/sites-available/$2.conf /etc/apache2/sites-enabled/$2.conf
+    en | -en | --enable)
+      actionEnable=1
+      ;;
+    dis | -dis | --disable)
+      actionDisable=1
+      ;;
+    del | -del | --delete)
+      actionDelete=1
+      ;;
+    *)
      ;;
-   dis|disable)
-     disable $2
-     ;;
-   del|delete)
-     disable $2
-     rm /etc/apache2/sites-available/$2.conf
-     ;;
-   *)
-     usage
   esac
+  shift
+done
+
+
+if [ "$domain" == "" ]; then
+  echo
+  echo "Error: missing domain"
+  echo
+  usage
+  exit 1
+else
+  if [ $actionCreate -eq 1 ] && [ $actionDelete -eq 1 ]; then
+    usage
+    exit 1
+  elif [ $actionCreate -eq 1 ]; then
+    serverLabName="${domain/dev/$labName}"
+    vhostTemplate=$templateFolder$template
+    sed "s@SERVER-ADMIN@$adminEmail@g;s@SERVER-PATH@$(pwd)@g;s@SERVER-DEV-NAME@$domain@g;s@SERVER-LAB-NAME@$serverLabName@g" $vhostTemplate > /etc/apache2/sites-available/$domain.conf
+  elif [ $actionDelete -eq 1 ]; then
+    disable $domain
+    rm /etc/apache2/sites-available/$domain.conf
+  fi
+
+  if [ $actionDisable -eq 1 ] && [ $actionEnable -eq 1 ]; then
+    usage
+    exit 1
+  elif [ $actionEnable -eq 1 ]; then
+    ln -s /etc/apache2/sites-available/$domain.conf /etc/apache2/sites-enabled/$domain.conf
+  elif [ $actionDisable -eq 1 ]; then
+    disable $domain
+  fi
+
+  if [ $apacheRestart -eq 1 ]; then
+    echo "restarting Apache using sudo"
+    sudo apachectl restart
+  fi
 fi
