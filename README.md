@@ -61,8 +61,8 @@ I am open for suggestions
 
 ## Changelog
 
-### 20150502
+### 20150503
 * **DONE**: _(slightly better check for given parameters)_ Parameter order is not important anymore.
 * **DONE**: _(chain actions together: cr -> en)_ You now can create a new Host and Enable it in one command ```vhm -d test.dev --create --enable```
 * added the possibility for custom template files. Just put another template file into the ```~/.vhm/``` Folder and use the -t parameter ```--template TEMPLATE_FILE_NAME```
-* added parameter taht restarts Apache after the changes ( ```-ar``` or ```--apache-restart``` ) it uses ```sudo```
+* added parameter that restarts Apache after the changes ( ```-ar``` or ```--apache-restart``` ) it uses ```sudo```
