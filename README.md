@@ -57,7 +57,10 @@ You can create additional template files. Just copy the VirtualHost.conf file in
 * Delete will remove the VirtualHost config file and the symlink from ```/etc/apache2/sites-enabled``` and ```/etc/apache2/sites-available```. This will **not** remove any of your Project files.
 
 ## TODO
-I am open for suggestions
+* vars.cfg as config file in ~/ so you dont overwrite it with every pull. If not set the one from ~/.vhm should be read instead
+* --info to print / cat vhost file to a given domain
+
+I am always open for suggestions
 
 ## Changelog
 
