@@ -7,7 +7,7 @@ Changes to the existing apache config are as little as possible.
 
 1. Clone Files: ```git clone https://github.com/alxndrhi/vhm.git ~/.vhm```
 2. symlink vhm: ```ln -s ~/.vhm/vhm ~/bin/vhm```
-3. Edit ```~/.vhm/vars.cfg```
+3. Set config: ```cp ~/.vhm/vars.cfg ~/.vhm.cfg``` _(don't forget to edit you config)_
 4. create _sites-available_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
 5. create _sites-enabled_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
 6. prepare apache conf: ```sudo echo "Include /etc/apache2/sites-enabled/*.conf" >> /etc/apache2/extra/httpd-vhosts.conf```
@@ -57,15 +57,5 @@ You can create additional template files. Just copy the VirtualHost.conf file in
 * Delete will remove the VirtualHost config file and the symlink from ```/etc/apache2/sites-enabled``` and ```/etc/apache2/sites-available```. This will **not** remove any of your Project files.
 
 ## TODO
-* vars.cfg as config file in ~/ so you dont overwrite it with every pull. If not set the one from ~/.vhm should be read instead
-* --info to print / cat vhost file to a given domain
 
 I am always open for suggestions
-
-## Changelog
-
-### 20150503
-* **DONE**: _(slightly better check for given parameters)_ Parameter order is not important anymore.
-* **DONE**: _(chain actions together: cr -> en)_ You now can create a new Host and Enable it in one command ```vhm -d test.dev --create --enable```
-* added the possibility for custom template files. Just put another template file into the ```~/.vhm/``` Folder and use the -t parameter ```--template TEMPLATE_FILE_NAME```
-* added parameter that restarts Apache after the changes ( ```-ar``` or ```--apache-restart``` ) it uses ```sudo```
