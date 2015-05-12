@@ -1,10 +1,10 @@
 #/bin/bash
-# vim: set ft=sh:
-if [ -f ~/.vhm.cfg ]; 
+# vim: set ft=sh:ts=2:sw=2
+if [ -f ~/.vhm.cfg ];
 then
   source ~/.vhm.cfg
 else
-  source ~/.vhm/vars.cfg
+  source ~/.vhm/vhm.cfg
 fi
 
 ## VARIABLES AND CONSTANTS
@@ -103,7 +103,7 @@ if [ "$domain" == "" ]; then
   usage
   exit 1
 else
-  
+
   if [ $actionStatus -eq 1 ];
   then
     if [ -f /etc/apache2/sites-enabled/$domain.conf ];
