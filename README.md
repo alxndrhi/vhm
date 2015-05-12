@@ -7,7 +7,7 @@ Changes to the existing apache config are as little as possible.
 
 1. Clone Files: ```git clone https://github.com/alxndrhi/vhm.git ~/.vhm```
 2. symlink vhm: ```ln -s ~/.vhm/vhm ~/bin/vhm```
-3. Set config: ```cp ~/.vhm/vars.cfg ~/.vhm.cfg``` _(don't forget to edit you config)_
+3. Set config: ```cp ~/.vhm/vhm.cfg ~/.vhm.cfg``` _(don'vhm forget to edit you config)_
 4. create _sites-available_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
 5. create _sites-enabled_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
 6. prepare apache conf: ```sudo echo "Include /etc/apache2/sites-enabled/*.conf" >> /etc/apache2/extra/httpd-vhosts.conf```
