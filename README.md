@@ -6,14 +6,14 @@ Changes to the existing apache config are as little as possible.
 ## Install
 
 1. Clone Files: ```git clone https://github.com/alxndrhi/vhm.git ~/.vhm```
-2. symlink vhm: ```ln -s ~/.vhm/vhm ~/bin/vhm```
+2. symlink vhm: ```ln -s ~/.vhm/vhm /usr/local/bin/vhm```
 3. Set config: ```cp ~/.vhm/vhm.cfg ~/.vhm.cfg``` _(don'vhm forget to edit you config)_
 4. create _sites-available_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
-5. create _sites-enabled_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
+5. create _sites-enabled_ folder: ```sudo mkdir -p /etc/apache2/sites-enabled```
 6. prepare apache conf: ```sudo echo "Include /etc/apache2/sites-enabled/*.conf" >> /etc/apache2/extra/httpd-vhosts.conf```
   * alternativ: copy the ```httpd-vhosts.conf``` file of this repo into ```/etc/apache2/extra``` (never forget to make **backups**)
 
-If you dont want to run ```vhm``` with sudo you should change the permission for ```/etc/apache2/sites-available``` and ```/etc/apache2/sites-enabled```.
+If you don't want to run ```vhm``` with sudo you should change the permission for ```/etc/apache2/sites-available``` and ```/etc/apache2/sites-enabled```.
 
 ## Using vhm
 
