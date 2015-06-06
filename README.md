@@ -6,13 +6,13 @@ Changes to the existing apache config are as little as possible.
 
 ## Install
 
-### Using Homebrew (recommanded)
+### Using Homebrew (recommended)
 1. Tab the location: ```brew tab alxndrhi/miscbrew```
 2. install Formula: ```brew install vhm```
 3. Tell apache where to find the configuration: ```sudo echo "Include /usr/local/etc/vhm/httpd-vhosts.conf >> /etc/apache2/extra/httpd-vhosts.conf```
 4. Check the vhm Configuration in: ```/usr/local/etc/vhm/vhm.cfg```
 
-### Manual Installation ( O.o why? )
+### Manual Installation
 1. create _sites-available_ folder: ```sudo mkdir -p /usr/local/etc/vhm/sites-available```
 2. create _sites-enabled_ folder: ```sudo mkdir -p /usr/local/etc/vhm/sites-available```
 3. Clone Files: ```git clone https://github.com/alxndrhi/vhm.git WHEREEVER-YOU-WANT-TO-PUT-THE-FILES```
