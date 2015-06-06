@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 # vim: set ft=sh:ts=2:sw=2
 
 ## Check if the User has a Configuration File and use this
