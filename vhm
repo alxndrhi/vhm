@@ -1,41 +1,45 @@
 #/bin/bash
 # vim: set ft=sh:ts=2:sw=2
+
+## Check if the User has a Configuration File and use this
 if [ -f ~/.vhm.cfg ];
 then
   source ~/.vhm.cfg
 else
-  source ~/.vhm/vhm.cfg
+  # Default Path of the Configuration File. You should use this location!
+  source /usr/local/etc/vhm/vhm.cfg
 fi
 
-## VARIABLES AND CONSTANTS
-actionCreate=-1
-actionEnable=-1
-actionDisable=-1
-actionDelete=-1
-apacheRestart=-1
-actionInfo=-1
-actionStatus=-1
+### VARIABLES AND CONSTANTS
+action_create=-1
+action_enable=-1
+action_disable=-1
+action_delete=-1
+action_info=-1
+action_status=-1
+apache_restart=-1
+server_port=$default_port
 
-
-## FUNCTINS
+### FUNCTINS
 disable () {
- if [ -f /etc/apache2/sites-enabled/$1.conf ]
+ if [ -f $sites_enabled/$1.conf ]
  then
-   rm /etc/apache2/sites-enabled/$1.conf
+   rm $sites_enabled/$1.conf
  fi
 }
 
 usage () {
-  echo "Usage: vhm -cr -ar -d example.dev -t templateFileName"
+  echo "Usage: vhm --domain example.dev --create --enable --apache-restart"
   echo
   echo "Parameter:"
-  echo "cr  | -cr  | --create     create VirtualHost"
-  echo "en  | -en  | --enable     enable VirtualHost"
-  echo "dis | -dis | --disable    disable VirtualHost"
-  echo "del | -del | --delete     delete VirtualHost"
+  echo "cr  | -cr  | --create           create VirtualHost"
+  echo "en  | -en  | --enable           enable VirtualHost"
+  echo "dis | -dis | --disable          disable VirtualHost"
+  echo "del | -del | --delete           delete VirtualHost"
+  echo "ar  | -ar  | --apache-restart   Restart Apache"
   echo "-i  | --info              show VirtualHost File for given Domain"
+  echo "-p  | --port              show VirtualHost File for given Domain"
   echo "-s  | --status            show VirtualHost (enabled, disabled, not created)"
-  echo "-ar | --apache-restart    Restart Apache"
   echo "-d  | --domain            Domain Name for the VirtualHost"
   echo "-t  | --template          Template Name to use for this Host"
   echo "-h  | --help              This little message"
@@ -43,12 +47,12 @@ usage () {
   echo "Parameter can be combined. So --create and --enable in one command is possible"
   echo
   echo "You may not use --create and --delete in one command."
-  echo "Same goes for --enable and --disable. That would be ..."
+  echo "Same goes for --enable and --disable."
+  echo "That would be ..."
   echo
 }
 
-
-## MAIN
+### MAIN
 if [ $# -eq 0 ]; then
   usage
   exit 1
@@ -56,7 +60,11 @@ fi
 
 while [ "$1" != "" ]; do
   case $1 in
-    -h | --help)
+    -p | --port)
+      shift
+      server_port=$1
+    ;;
+    -h | --help)
       usage
       exit 0
       ;;
@@ -64,30 +72,30 @@ while [ "$1" != "" ]; do
       shift
       domain=$1
       ;;
-    -ar | --apache-restart)
-      apacheRestart=1
+    ar | -ar | --apache-restart)
+      apache_restart=1
       ;;
     -t | --template)
       shift
       template=$1
       ;;
     cr | -cr | --create)
-      actionCreate=1
+      action_create=1
      ;;
     en | -en | --enable)
-      actionEnable=1
+      action_enable=1
       ;;
     dis | -dis | --disable)
-      actionDisable=1
+      action_disable=1
       ;;
     del | -del | --delete)
-      actionDelete=1
+      action_delete=1
       ;;
     -i | --info)
-      actionInfo=1
+      action_info=1
       ;;
     -s | --status)
-      actionStatus=1
+      action_status=1
       ;;
     *)
      ;;
@@ -103,14 +111,13 @@ if [ "$domain" == "" ]; then
   usage
   exit 1
 else
-
-  if [ $actionStatus -eq 1 ];
+  if [ $action_status -eq 1 ];
   then
-    if [ -f /etc/apache2/sites-enabled/$domain.conf ];
+    if [ -f $sites_enabled/$domain.conf ];
     then
       echo "Status: enabled"
     else
-      if [ -f /etc/apache2/sites-available/$domain.conf ];
+      if [ -f $sites_available/$domain.conf ];
       then
         echo "Status: disabled"
       else
@@ -119,38 +126,37 @@ else
     fi
   fi
 
-
-  if [ $actionCreate -eq 1 ] && [ $actionDelete -eq 1 ]; then
+  if [ $action_create -eq 1 ] && [ $action_delete -eq 1 ]; then
     usage
     exit 1
-  elif [ $actionCreate -eq 1 ]; then
-    vhostTemplate=$templateFolder$template
-    sed "s@SERVER-ADMIN@$adminEmail@g;s@SERVER-PATH@$(pwd)@g;s@SERVER-DEV-NAME@$domain@g" $vhostTemplate > /etc/apache2/sites-available/$domain.conf
-  elif [ $actionDelete -eq 1 ]; then
+  elif [ $action_create -eq 1 ]; then
+    vhost_template=$template_folder/$template_default
+    sed "s@SERVER-ADMIN@$admin_email@g;s@SERVER-PATH-ROOT@$(pwd)@g;s@SERVER-NAME@$domain@g;s@SERVER-PATH-LOG@$server_path_log@g;s@SERVER-PORT@$server_port@g" $vhost_template > $sites_available/$domain.conf
+  elif [ $action_delete -eq 1 ]; then
     disable $domain
-    rm /etc/apache2/sites-available/$domain.conf
+    rm $sites_available/$domain.conf
   fi
 
-  if [ $actionDisable -eq 1 ] && [ $actionEnable -eq 1 ]; then
+  if [ $action_disable -eq 1 ] && [ $action_enable -eq 1 ]; then
     usage
     exit 1
-  elif [ $actionEnable -eq 1 ]; then
-    ln -s /etc/apache2/sites-available/$domain.conf /etc/apache2/sites-enabled/$domain.conf
-  elif [ $actionDisable -eq 1 ]; then
+  elif [ $action_enable -eq 1 ]; then
+    ln -s $sites_available/$domain.conf $sites_enabled/$domain.conf
+  elif [ $action_disable -eq 1 ]; then
     disable $domain
   fi
 
-  if [ $actionInfo -eq 1 ];
+  if [ $action_info -eq 1 ];
   then
-    if [ -f /etc/apache2/sites-available/$domain.conf ];
+    if [ -f $sites_available/$domain.conf ];
     then
-      cat /etc/apache2/sites-available/$domain.conf
+      cat $sites_available/$domain.conf
     else
       echo "Configuration not found"
     fi
   fi
 
-  if [ $apacheRestart -eq 1 ]; then
+  if [ $apache_restart -eq 1 ]; then
     echo "restarting Apache using sudo"
     sudo apachectl restart
   fi

@@ -1,6 +1,11 @@
 # Changelog
 
-## 20150507 _(tagged as v0.1)_
+## 20150606 (Release v0.1.0)
+* Updated Installation Instruction - created Homebrew Tab _(yeah I know, I changed the folder structure for this)_
+* Updated Paths in files - now you have less to do after brewing this :)
+* Fixed Variable Names and cleaned it up a bit
+
+## 20150507
 * DONE: vars.cfg as config file in ~/ so you dont overwrite it with every pull. If not set the one from ~/.vhm should be read instead
 * DONE: --info to print / cat vhost file to a given domain
 * added: --status to print status of given domain (enabled, disabled, not created)

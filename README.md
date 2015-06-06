@@ -3,17 +3,22 @@
 This is a litte script that should help to manage apache's virtual hosts on Mac OS X Systems _(it may also run on other unix based systems with some or none changes)_.
 Changes to the existing apache config are as little as possible.
 
+
 ## Install
 
-1. Clone Files: ```git clone https://github.com/alxndrhi/vhm.git ~/.vhm```
-2. symlink vhm: ```ln -s ~/.vhm/vhm ~/bin/vhm```
-3. Set config: ```cp ~/.vhm/vhm.cfg ~/.vhm.cfg``` _(don'vhm forget to edit you config)_
-4. create _sites-available_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
-5. create _sites-enabled_ folder: ```sudo mkdir -p /etc/apache2/sites-available```
-6. prepare apache conf: ```sudo echo "Include /etc/apache2/sites-enabled/*.conf" >> /etc/apache2/extra/httpd-vhosts.conf```
-  * alternativ: copy the ```httpd-vhosts.conf``` file of this repo into ```/etc/apache2/extra``` (never forget to make **backups**)
+### Using Homebrew (recommanded)
+1. Tab the location: ```brew tab alxndrhi/miscbrew```
+2. install Formula: ```brew install vhm```
+3. Tell apache where to find the configuration: ```sudo echo "Include /usr/local/etc/vhm/httpd-vhosts.conf >> /etc/apache2/extra/httpd-vhosts.conf```
+4. Check the vhm Configuration in: ```/usr/local/etc/vhm/vhm.cfg```
 
-If you dont want to run ```vhm``` with sudo you should change the permission for ```/etc/apache2/sites-available``` and ```/etc/apache2/sites-enabled```.
+### Manual Installation ( O.o why? )
+1. create _sites-available_ folder: ```sudo mkdir -p /usr/local/etc/vhm/sites-available```
+2. create _sites-enabled_ folder: ```sudo mkdir -p /usr/local/etc/vhm/sites-available```
+3. Clone Files: ```git clone https://github.com/alxndrhi/vhm.git WHEREEVER-YOU-WANT-TO-PUT-THE-FILES```
+4. symlink vhm: ```ln -s WHEREEVER-YOU-WANT-TO-PUT-THE-FILES/vhm /usr/local/bin/vhm```
+5. Set config: ```cp WHEREEVER-YOU-WANT-TO-PUT-THE-FILES/vhm.cfg /usr/local/etc/vhm/.vhm.cfg``` _(don't forget to edit you config)_
+6. Tell apache where to find the configuration: ```sudo echo "Include /usr/local/etc/vhm/httpd-vhosts.conf >> /etc/apache2/extra/httpd-vhosts.conf```
 
 ## Using vhm
 
@@ -21,7 +26,7 @@ To create a Host, you have to go into the Root Folder of the new Host and run vh
 
 ### examples
 
-Ok, lets say we want to create the development domain _testing.dev_ with the DocumentRoot in ~/Sites/testing.dev/, 
+Ok, lets say we want to create the development domain _testing.dev_ with the DocumentRoot in ~/Sites/testing.dev/,
 and as we are already here, we also want to enable it and restart apache.
 
 ```
@@ -30,7 +35,7 @@ cd ~/Sites/testing.dev
 vhm --domain testing.dev --create --enable --apache-restart
 ```
 
-You can also use your custom template file or an alternativ template file by using the --template parameter. 
+You can also use your custom template file or an alternativ template file by using the --template parameter.
 
 ```
 mkdir -p ~/Sites/testing.dev
