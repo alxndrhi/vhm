@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 # vim: set ft=sh:ts=2:sw=2
+#
+# Virtual Host Manager (vhm)
+# Find more Information here: http://github.com/alxndrhi/vhm
+# @author Alexander Hinrichs
 
 ## Check if the User has a Configuration File and use this
 if [ -f ~/.vhm.cfg ];
 then
   source ~/.vhm.cfg
 else
-  # Default Path of the Configuration File. You should use this location!
+  # Default Path of the Configuration File.
   source /usr/local/etc/vhm/vhm.cfg
 fi
 
