@@ -69,6 +69,7 @@ You can create your own template files. Just put them in ```/usr/local/etc/vhm/t
 Actually it is not that hard to migrate from an earlier clone of this repository, but there are some steps to do. I know, you are pretty hardcore, so this shouldn't be a problem for you.
 
 Just in case, here is a little checklist.
+
 1. remove old vhm Files ```rm -rf ~/.vhm/```
 2. remove old vhm script from bin, if in ~/bin: ```rm ~/bin/vhm``` if located in /usr/local/bin: ```rm /usr/local/bin/vhm```
 3. Install vhm: ```brew tap alxndrhi/miscbrew && brew install vhm```
