@@ -61,10 +61,6 @@ You can create your own template files. Just put them in ```/usr/local/etc/vhm/t
 * If apache don't start just run ```apachectl``` without any parameter to see the error message.
 * Delete will remove the VirtualHost config file and the symlink from ```/etc/apache2/sites-enabled``` and ```/etc/apache2/sites-available```. This will **not** remove any of your project files.
 
-## TODO
-* custom variables to replace in template file
-* try to run apachectl without sudo first and fallback to sudo
-
 ## Migration from earlier versions to v0.1.1
 Actually it is not that hard to migrate from an earlier clone of this repository, but there are some steps to do. I know, you are pretty hardcore, so this shouldn't be a problem for you.
 
