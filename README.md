@@ -6,11 +6,11 @@ The Idea is to keep the changes on the existing config as little as possible.
 ## Install
 
 ### Homebrew (recommended)
-1. Install: ```brew tab alxndrhi/miscbrew && brew install vhm```
+1. Install: ```brew tap alxndrhi/miscbrew && brew install vhm```
 2. Tell apache where to find the configuration: ```sudo echo "Include /usr/local/etc/vhm/httpd-vhosts.conf" >> /etc/apache2/extra/httpd-vhosts.conf```
 3. Check the vhm Configuration in: ```/usr/local/etc/vhm/vhm.cfg```
 
-### Manual O.o
+### Manual
 1. create _sites-available_ folder: ```mkdir -p /usr/local/etc/vhm/sites-available```
 2. create _sites-enabled_ folder: ```mkdir -p /usr/local/etc/vhm/sites-enabled```
 3. create _templates_ folder: ```mkdir -p /usr/local/etc/vhm/templates```
