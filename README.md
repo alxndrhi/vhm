@@ -65,17 +65,3 @@ You can create your own template files. Just put them in ```/usr/local/etc/vhm/t
 * Remember to restart apache after every change to the configuration.
 * If apache don't start just run ```apachectl``` without any parameter to see the error message.
 * Delete will remove the VirtualHost config file and the symlink from ```/etc/apache2/sites-enabled``` and ```/etc/apache2/sites-available```. This will **not** remove any of your project files.
-
-## Migration from earlier versions to v0.1.1
-Actually it is not that hard to migrate from an earlier clone of this repository, but there are some steps to do. I know, you are pretty hardcore, so this shouldn't be a problem for you.
-
-Just in case, here is a little checklist.
-
-1. remove old vhm Files ```rm -rf ~/.vhm/```
-2. remove old vhm script from bin, if in ~/bin: ```rm ~/bin/vhm``` if located in /usr/local/bin: ```rm /usr/local/bin/vhm```
-3. Install vhm: ```brew tap alxndrhi/miscbrew && brew install vhm```
-4. Copy existing VirtualHosts: ```cp /etc/apache2/sites-available/* /usr/local/etc/vhm/sites-available/```
-5. update your local config in: ```~/.vhm.cfg```by comparing it with the new one here: ```/usr/local/etc/vhm/vhm.cfg```or simply delete the old one and update the new one
-6. Enable every Site you want to have enabled.
-7. remove old directories ```rm -rf /etc/apache2/sites-enabled && rm -rf /etc/apache2/sites-available```
-8. update apache to point to the new config location _(step 2 Installation with Homebrew)_
