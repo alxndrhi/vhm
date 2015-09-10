@@ -15,15 +15,26 @@ else
 fi
 
 ### VARIABLES AND CONSTANTS
+version_no=0.2.0
+action_version=-1
 action_create=-1
 action_enable=-1
 action_disable=-1
 action_delete=-1
 action_info=-1
 action_status=-1
+action_list=-1
 apache_restart=-1
-server_port=$default_port
+is_domain_action=-1
 
+server_port=$default_port
+sudo=$use_sudo
+
+## Colors
+color_reset=$(tput sgr0)
+color_red=$(tput setaf 1)
+color_green=$(tput setaf 2)
+ 
 ### FUNCTINS
 disable () {
  if [ -f $sites_enabled/$1.conf ]
@@ -45,8 +56,10 @@ usage () {
   echo "-p  | --port              show VirtualHost File for given Domain"
   echo "-s  | --status            show VirtualHost (enabled, disabled, not created)"
   echo "-d  | --domain            Domain Name for the VirtualHost"
-  echo "-t  | --template          Template Name to use for this Host"
-  echo "-h  | --help              This little message"
+  echo "-t  | --template          Template Name to use for this Host"
+  echo "-l  | --list              List available and enabled domains"
+  echo "-v  | --version           Print version"
+  echo "-h  | --help              This little message"
   echo
   echo "Parameter can be combined. So --create and --enable in one command is possible"
   echo
@@ -67,6 +80,7 @@ while [ "$1" != "" ]; do
     -p | --port)
       shift
       server_port=$1
+      is_domain_action=1
     ;;
     -h | --help)
       usage
@@ -75,6 +89,7 @@ while [ "$1" != "" ]; do
     -d | --domain)
       shift
       domain=$1
+      is_domain_action=1
       ;;
     ar | -ar | --apache-restart)
       apache_restart=1
@@ -82,24 +97,37 @@ while [ "$1" != "" ]; do
     -t | --template)
       shift
       template=$1
+      is_domain_action=1
       ;;
     cr | -cr | --create)
       action_create=1
+      is_domain_action=1
      ;;
     en | -en | --enable)
       action_enable=1
+      is_domain_action=1
       ;;
     dis | -dis | --disable)
       action_disable=1
+      is_domain_action=1
       ;;
     del | -del | --delete)
       action_delete=1
+      is_domain_action=1
       ;;
     -i | --info)
       action_info=1
+      is_domain_action=1
       ;;
     -s | --status)
       action_status=1
+      is_domain_action=1
+      ;;
+    -l | --list)
+      action_list=1
+      ;;
+    -v | --version)
+      action_version=1
       ;;
     *)
      ;;
@@ -107,10 +135,9 @@ while [ "$1" != "" ]; do
   shift
 done
 
-
-if [ "$domain" == "" ]; then
+if [ "$domain" == "" ] && [ $is_domain_action -eq 1 ]; then
   echo
-  echo "Error: missing domain"
+  printf "%s\n" "${color_red}Error: missing domain${color_reset}"
   echo
   usage
   exit 1
@@ -119,13 +146,14 @@ else
   then
     if [ -f $sites_enabled/$domain.conf ];
     then
-      echo "Status: enabled"
+      printf "%s\n" "Status: ${color_green}enabled${color_reset}"
     else
       if [ -f $sites_available/$domain.conf ];
       then
-        echo "Status: disabled"
+        printf "%s\n" "Status: ${color_red}disabled${color_reset}"
       else
-        echo "Status: not created"
+        printf "%s\n" "Status: ${color_red}no domain with this name${color_reset}"
+        printf "%s\n" "see: 'vhm -l' for a list of Domains"
       fi
     fi
   fi
@@ -161,7 +189,28 @@ else
   fi
 
   if [ $apache_restart -eq 1 ]; then
-    echo "restarting Apache using sudo"
-    sudo apachectl restart
+    if [ $sudo -eq 1 ]; then
+      echo "restarting Apache using sudo"
+      sudo apachectl restart
+    else
+      apachectl restart
+    fi
+  fi
+
+  if [ $action_list -eq 1 ]; then
+    dir_available=`ls -lhA $sites_available |awk '{print $9}'`
+   for file_name in $dir_available; do
+     domain_name=`echo $file_name | sed "s@.conf@@g"`
+
+      is_enabled="${color_red}disabled${color_reset}"
+      if [ -L $sites_enabled/$file_name ]; then
+        is_enabled="${color_green}enabled${color_reset}"
+      fi
+      printf '%-30s %8s\n' "$domain_name" "$is_enabled"
+    done
+  fi
+
+  if [ $action_version -eq 1 ]; then
+    printf "Version %s\n" "$version_no"
   fi
 fi

@@ -1,5 +1,10 @@
 # Changelog
 
+## 20150910 (Release v0.2.0)
+* Added list view of Domains including status
+* You now can set use_suo in config to -1 if you dont want apachectl to be run as sudo
+* Added some fancy colors
+
 ## 20150606 (Release v0.1.0)
 * Updated Installation Instruction - created Homebrew Tab _(yeah I know, I changed the folder structure for this)_
 * Updated Paths in files - now you have less to do after brewing this :)

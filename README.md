@@ -49,6 +49,11 @@ vhm -d testing.dev --enable
 vhm -d testing.dev --disable
 vhm -d testing.dev --delete
 ```
+See a list of Domains including Status:
+
+```
+vhm -l
+```
 
 For a full list of parameters see ```vhm --help```
 
