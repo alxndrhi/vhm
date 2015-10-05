@@ -24,6 +24,7 @@ action_delete=-1
 action_info=-1
 action_status=-1
 action_list=-1
+action_hook=-1
 apache_restart=-1
 is_domain_action=-1
 
@@ -60,6 +61,7 @@ usage () {
   echo "-l  | --list              List available and enabled domains"
   echo "-v  | --version           Print version"
   echo "-h  | --help              This little message"
+  echo "-hk | --hook              Give a hook File (any shell script will do)"
   echo
   echo "Parameter can be combined. So --create and --enable in one command is possible"
   echo
@@ -82,6 +84,15 @@ while [ "$1" != "" ]; do
       server_port=$1
       is_domain_action=1
     ;;
+    -hk | --hook)
+      shift
+      hook_file=$1
+      if [ ! -f "$hook_file" -o "$hook_file" == "" ]; then
+        echo "could not find hook file!"
+        exit 0
+      fi
+      action_hook=1
+      ;;
     -h | --help)
       usage
       exit 0
@@ -213,4 +224,9 @@ else
   if [ $action_version -eq 1 ]; then
     printf "Version %s\n" "$version_no"
   fi
+fi
+
+
+if [ $action_hook -eq 1 ]; then
+  source $hook_file
 fi
