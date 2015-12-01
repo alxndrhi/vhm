@@ -35,7 +35,7 @@ sudo=$use_sudo
 color_reset=$(tput sgr0)
 color_red=$(tput setaf 1)
 color_green=$(tput setaf 2)
- 
+
 ### FUNCTINS
 disable () {
  if [ -f $sites_enabled/$1.conf ]
@@ -209,7 +209,7 @@ else
   fi
 
   if [ $action_list -eq 1 ]; then
-    dir_available=`ls -lhA $sites_available |awk '{print $9}'`
+    dir_available=`ls -lhA $sites_available|egrep '\.conf' |awk '{print $9}'`
    for file_name in $dir_available; do
      domain_name=`echo $file_name | sed "s@.conf@@g"`
 
